@@ -1,5 +1,6 @@
 import argparse
 import logging
+from configparser import ConfigParser
 
 """
 Skeleton for Squirro Delivery Hiring Coding Challenge
@@ -63,16 +64,25 @@ class NYTimesSource(object):
 
 
 if __name__ == "__main__":
-    config = {
-        "api_key": "NYTIMES_API_KEY",
-        "query": "Silicon Valley",
-    }
+    # config = {
+    #     "api_key": "NYTIMES_API_KEY",
+    #     "query": "Silicon Valley",
+    # }
+    # Parser for getting API credentials from cfg file 
+    configParser = ConfigParser()
+    configFilePath = 'nyt_article_search.cfg'
+
+    with open(configFilePath) as f:
+        configParser.read_file(f)
+
+    config = dict()
+    config['APP_KEY'] = configParser["credentials"]['APP_KEY']
+    config['APP_SECRET'] = configParser['credentials']['APP_SECRET']
     source = NYTimesSource()
 
     # This looks like an argparse dependency - but the Namespace class is just
     # a simple way to create an object holding attributes.
-    source.args = argparse.Namespace(**config)
-
+    source.args = argparse.Namespace(**config, query='')
     for idx, batch in enumerate(source.getDataBatch(10)):
         print(f"{idx} Batch of {len(batch)} items")
         for item in batch:
