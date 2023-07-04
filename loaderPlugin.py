@@ -148,12 +148,13 @@ if __name__ == "__main__":
     config = dict()
     config['APP_KEY'] = configParser["credentials"]['APP_KEY']
     config['APP_SECRET'] = configParser['credentials']['APP_SECRET']
+    config['generic_api_url'] = configParser['endpoints']['GENERIC_ARTICLE_SEARCH_API']
+     
     source = NYTimesSource()
 
     # This looks like an argparse dependency - but the Namespace class is just
     # a simple way to create an object holding attributes.
-    source.args = argparse.Namespace(**config, query='Silicon Valley', 
-                                     generic_api_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json', 
+    source.args = argparse.Namespace(**config, query='Silicon Valley',                                      
                                      sort='oldest')
     for idx, batch in enumerate(source.getDataBatch(10)):
         print(f"{idx+1} Batch of {len(batch)} items")
